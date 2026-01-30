@@ -129,6 +129,11 @@ Inspired by:
 - Accessibility advocates
 
 ---
+## 🔗 Live Link
+https://vocal-duckanoo-358eb0.netlify.app/
+
+---
+
 ## Script
 CareConnect is a web-based Pandemic Response Toolkit designed to help individuals and communities navigate health crises more effectively.
 
