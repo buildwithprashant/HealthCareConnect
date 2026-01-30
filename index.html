@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareConnect - Pandemic Response Toolkit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-teal: #0d7377;
+            --primary-light: #14a6ab;
+            --accent-coral: #ff6b6b;
+            --accent-warm: #ffa07a;
+            --bg-cream: #fef9f3;
+            --bg-light: #ffffff;
+            --text-dark: #2c3e50;
+            --text-medium: #5a6c7d;
+            --text-light: #8e9eab;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --shadow-soft: 0 8px 32px rgba(13, 115, 119, 0.08);
+            --shadow-hover: 0 12px 48px rgba(13, 115, 119, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-cream);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(13, 115, 119, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 107, 107, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Header */
+        header {
+            background: var(--bg-light);
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow-soft);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 3px solid var(--primary-teal);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-teal), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-teal), var(--accent-coral));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .language-selector {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid var(--primary-teal);
+            border-radius: 25px;
+            background: transparent;
+            color: var(--primary-teal);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-selector:hover {
+            background: var(--primary-teal);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .accessibility-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent-coral);
+            color: white;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .accessibility-btn:hover {
+            background: var(--accent-warm);
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            box-shadow: var(--shadow-soft);
+            position: sticky;
+            top: 90px;
+            z-index: 999;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 1.2rem 2rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--text-medium);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .nav-tab:hover {
+            color: var(--primary-teal);
+            background: rgba(13, 115, 119, 0.05);
+        }
+
+        .nav-tab.active {
+            color: var(--primary-teal);
+            border-bottom-color: var(--accent-coral);
+            background: rgba(13, 115, 119, 0.05);
+        }
+
+        .nav-tab::after {
+            content: attr(data-icon);
+            margin-left: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            min-height: calc(100vh - 300px);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-teal), var(--primary-light));
+            padding: 4rem 3rem;
+            border-radius: 24px;
+            color: white;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
+        }
+
+        .hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-teal), var(--accent-coral));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-5px);
+            border-color: var(--primary-light);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-teal), var(--primary-light));
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .card p {
+            color: var(--text-medium);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 25px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-teal);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(13, 115, 119, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--accent-coral);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-warm);
+            transform: translateY(-2px);
+        }
+
+        /* Healthcare Resources */
+        .facility-finder {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid #e0e7ee;
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+            box-shadow: 0 0 0 4px rgba(13, 115, 119, 0.1);
+        }
+
+        .facility-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .facility-item {
+            padding: 1.5rem;
+            border: 2px solid #e0e7ee;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .facility-item:hover {
+            border-color: var(--primary-teal);
+            background: rgba(13, 115, 119, 0.02);
+        }
+
+        .facility-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-teal), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .facility-info h4 {
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .facility-info p {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        .distance-badge {
+            padding: 0.5rem 1rem;
+            background: var(--bg-cream);
+            border-radius: 20px;
+            font-weight: 600;
+            color: var(--primary-teal);
+        }
+
+        /* Mental Health Section */
+        .wellness-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .wellness-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .wellness-card:nth-child(2) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .wellness-card:nth-child(3) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .wellness-card:nth-child(4) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .wellness-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .wellness-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Information Hub */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-teal);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        .news-feed {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .news-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e0e7ee;
+            transition: all 0.3s ease;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-item:hover {
+            background: var(--bg-cream);
+            border-radius: 10px;
+        }
+
+        .news-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .news-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Community Connection */
+        .community-map {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 2rem;
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(13, 115, 119, 0.05), rgba(255, 107, 107, 0.05));
+        }
+
+        .assistance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .assistance-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            border-left: 4px solid var(--primary-teal);
+        }
+
+        .assistance-card.offer {
+            border-left-color: var(--success);
+        }
+
+        .assistance-card.request {
+            border-left-color: var(--accent-coral);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-teal), var(--accent-coral));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-coral);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Accessibility Features */
+        .high-contrast {
+            filter: contrast(1.2);
+        }
+
+        .large-text {
+            font-size: 1.2em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .facility-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 24px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--accent-coral);
+        }
+
+        .symptom-checker {
+            margin-top: 2rem;
+        }
+
+        .symptom-option {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border: 2px solid #e0e7ee;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .symptom-option:hover {
+            border-color: var(--primary-teal);
+            background: rgba(13, 115, 119, 0.05);
+        }
+
+        .symptom-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🏥</div>
+                <h1>CareConnect</h1>
+            </div>
+            <div class="header-actions">
+                <select class="language-selector" id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="zh">中文</option>
+                    <option value="ar">العربية</option>
+                </select>
+                <button class="accessibility-btn" id="accessibilityBtn" title="Accessibility Options">♿</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="home" data-icon="🏠">Home</button>
+                <button class="nav-tab" data-tab="healthcare" data-icon="⚕️">Healthcare</button>
+                <button class="nav-tab" data-tab="mental-health" data-icon="🧘">Mental Health</button>
+                <button class="nav-tab" data-tab="information" data-icon="📊">Information Hub</button>
+                <button class="nav-tab" data-tab="community" data-icon="🤝">Community</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Tab -->
+        <div id="home" class="tab-content active">
+            <div class="hero">
+                <h2>Your Comprehensive Pandemic Support System</h2>
+                <p>Access healthcare resources, mental wellness support, real-time information, and community connections—all in one place. We're here to help you navigate these challenging times with confidence and care.</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card" onclick="switchTab('healthcare')">
+                    <div class="card-icon">🏥</div>
+                    <h3>Healthcare Resources</h3>
+                    <p>Find nearby facilities, schedule vaccinations, access telemedicine, and check your symptoms with our comprehensive healthcare toolkit.</p>
+                    <button class="btn btn-primary">Explore Healthcare →</button>
+                </div>
+
+                <div class="card" onclick="switchTab('mental-health')">
+                    <div class="card-icon">🧘</div>
+                    <h3>Mental Wellness</h3>
+                    <p>Access meditation guides, connect with therapists, practice stress-relief activities, and prioritize your mental health.</p>
+                    <button class="btn btn-primary">Start Wellness Journey →</button>
+                </div>
+
+                <div class="card" onclick="switchTab('information')">
+                    <div class="card-icon">📊</div>
+                    <h3>Information Hub</h3>
+                    <p>Stay informed with real-time pandemic data, latest guidelines, verified news updates, and expert recommendations.</p>
+                    <button class="btn btn-primary">View Updates →</button>
+                </div>
+
+                <div class="card" onclick="switchTab('community')">
+                    <div class="card-icon">🤝</div>
+                    <h3>Community Connect</h3>
+                    <p>Connect with neighbors, offer or request assistance, share local resources, and build a supportive community network.</p>
+                    <button class="btn btn-primary">Join Community →</button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1,200+</div>
+                    <div class="stat-label">Healthcare Facilities</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Mental Health Professionals</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">Community Connections</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Healthcare Tab -->
+        <div id="healthcare" class="tab-content">
+            <div class="hero">
+                <h2>Healthcare Resources at Your Fingertips</h2>
+                <p>Find the care you need, when you need it. From nearby facilities to telemedicine appointments.</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card" onclick="openModal('symptomChecker')">
+                    <div class="card-icon">🩺</div>
+                    <h3>Symptom Checker</h3>
+                    <p>Check your symptoms and get preliminary guidance on next steps.</p>
+                    <button class="btn btn-secondary">Check Symptoms</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">💉</div>
+                    <h3>Vaccination Scheduler</h3>
+                    <p>Find vaccination centers and book your appointment easily.</p>
+                    <button class="btn btn-secondary">Schedule Now</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">💻</div>
+                    <h3>Telemedicine</h3>
+                    <p>Connect with healthcare providers from the comfort of your home.</p>
+                    <button class="btn btn-secondary">Start Consultation</button>
+                </div>
+            </div>
+
+            <div class="facility-finder">
+                <h2 style="margin-bottom: 1.5rem;">Find Healthcare Facilities Near You</h2>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Enter your location or zip code">
+                    <button class="btn btn-primary">Search</button>
+                </div>
+
+                <div class="facility-list">
+                    <div class="facility-item">
+                        <div class="facility-icon">🏥</div>
+                        <div class="facility-info">
+                            <h4>City General Hospital</h4>
+                            <p>Emergency Care • COVID Testing • Vaccination Center</p>
+                            <p>123 Main Street, Downtown</p>
+                        </div>
+                        <div class="distance-badge">0.8 mi</div>
+                    </div>
+
+                    <div class="facility-item">
+                        <div class="facility-icon">🏥</div>
+                        <div class="facility-info">
+                            <h4>Community Health Clinic</h4>
+                            <p>Primary Care • Telemedicine • Vaccination</p>
+                            <p>456 Oak Avenue, Midtown</p>
+                        </div>
+                        <div class="distance-badge">1.2 mi</div>
+                    </div>
+
+                    <div class="facility-item">
+                        <div class="facility-icon">🏥</div>
+                        <div class="facility-info">
+                            <h4>Urgent Care Center</h4>
+                            <p>Walk-in Clinic • COVID Testing • Minor Emergency</p>
+                            <p>789 Elm Street, Eastside</p>
+                        </div>
+                        <div class="distance-badge">2.1 mi</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mental Health Tab -->
+        <div id="mental-health" class="tab-content">
+            <div class="hero">
+                <h2>Your Mental Wellness Matters</h2>
+                <p>Take care of your mind and emotions with our comprehensive mental health support resources.</p>
+            </div>
+
+            <div class="wellness-grid">
+                <div class="wellness-card">
+                    <div class="wellness-icon">🧘‍♀️</div>
+                    <h3>Guided Meditation</h3>
+                    <p>5-30 minute sessions for stress relief and mindfulness</p>
+                    <button class="btn" style="background: rgba(255,255,255,0.2); color: white; margin-top: 1rem;">Start Session</button>
+                </div>
+
+                <div class="wellness-card">
+                    <div class="wellness-icon">💆</div>
+                    <h3>Stress Relief</h3>
+                    <p>Breathing exercises, relaxation techniques, and more</p>
+                    <button class="btn" style="background: rgba(255,255,255,0.2); color: white; margin-top: 1rem;">Try Activities</button>
+                </div>
+
+                <div class="wellness-card">
+                    <div class="wellness-icon">👨‍⚕️</div>
+                    <h3>Therapist Connect</h3>
+                    <p>Book sessions with licensed mental health professionals</p>
+                    <button class="btn" style="background: rgba(255,255,255,0.2); color: white; margin-top: 1rem;">Find Therapist</button>
+                </div>
+
+                <div class="wellness-card">
+                    <div class="wellness-icon">📝</div>
+                    <h3>Wellness Journal</h3>
+                    <p>Track your mood, thoughts, and mental health journey</p>
+                    <button class="btn" style="background: rgba(255,255,255,0.2); color: white; margin-top: 1rem;">Start Journal</button>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>🎧 Calming Soundscapes</h3>
+                    <p>Nature sounds, white noise, and ambient music to help you relax and focus.</p>
+                    <button class="btn btn-primary">Listen Now</button>
+                </div>
+
+                <div class="card">
+                    <h3>📚 Mental Health Resources</h3>
+                    <p>Articles, videos, and guides on managing anxiety, depression, and stress.</p>
+                    <button class="btn btn-primary">Explore Library</button>
+                </div>
+
+                <div class="card">
+                    <h3>👥 Support Groups</h3>
+                    <p>Join virtual support groups and connect with others facing similar challenges.</p>
+                    <button class="btn btn-primary">Find Groups</button>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 2rem; border-radius: 20px; box-shadow: var(--shadow-soft); margin-top: 2rem; text-align: center;">
+                <h3 style="color: var(--accent-coral); margin-bottom: 1rem;">Crisis Support</h3>
+                <p style="margin-bottom: 1.5rem;">If you're experiencing a mental health crisis, help is available 24/7.</p>
+                <button class="btn btn-secondary" style="font-size: 1.1rem;">Contact Crisis Hotline</button>
+            </div>
+        </div>
+
+        <!-- Information Hub Tab -->
+        <div id="information" class="tab-content">
+            <div class="hero">
+                <h2>Stay Informed, Stay Safe</h2>
+                <p>Access real-time pandemic data, latest guidelines, and verified information from trusted sources.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">2.4M</div>
+                    <div class="stat-label">Total Cases (Local)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">89%</div>
+                    <div class="stat-label">Vaccination Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1.2K</div>
+                    <div class="stat-label">Active Cases</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--success);">▼ 12%</div>
+                    <div class="stat-label">Trend (7 Days)</div>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">📋</div>
+                    <h3>Latest Guidelines</h3>
+                    <p>Current health and safety protocols from official health authorities.</p>
+                    <button class="btn btn-primary">View Guidelines</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🗺️</div>
+                    <h3>Interactive Map</h3>
+                    <p>Visualize pandemic data by region with our interactive mapping tool.</p>
+                    <button class="btn btn-primary">Explore Map</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">📈</div>
+                    <h3>Trend Analysis</h3>
+                    <p>Understand pandemic trends and forecasts with detailed analytics.</p>
+                    <button class="btn btn-primary">View Trends</button>
+                </div>
+            </div>
+
+            <div class="news-feed">
+                <h2 style="margin-bottom: 2rem;">Latest Updates & News</h2>
+                
+                <div class="news-item">
+                    <div class="news-meta">
+                        <span>📰 Health Authority</span>
+                        <span>•</span>
+                        <span>2 hours ago</span>
+                    </div>
+                    <div class="news-title">New Vaccination Sites Opening This Week</div>
+                    <p style="color: var(--text-medium);">Three new vaccination centers will open across the city to improve accessibility and reduce wait times...</p>
+                </div>
+
+                <div class="news-item">
+                    <div class="news-meta">
+                        <span>📊 CDC Update</span>
+                        <span>•</span>
+                        <span>5 hours ago</span>
+                    </div>
+                    <div class="news-title">Updated Guidelines for Indoor Activities</div>
+                    <p style="color: var(--text-medium);">Health officials have released new recommendations for indoor gatherings based on current transmission rates...</p>
+                </div>
+
+                <div class="news-item">
+                    <div class="news-meta">
+                        <span>🔬 Research</span>
+                        <span>•</span>
+                        <span>1 day ago</span>
+                    </div>
+                    <div class="news-title">Study Shows Effectiveness of Booster Shots</div>
+                    <p style="color: var(--text-medium);">New research demonstrates that booster vaccinations significantly improve immunity against new variants...</p>
+                </div>
+
+                <div class="news-item">
+                    <div class="news-meta">
+                        <span>💼 Local News</span>
+                        <span>•</span>
+                        <span>2 days ago</span>
+                    </div>
+                    <div class="news-title">Small Businesses Receive Relief Support</div>
+                    <p style="color: var(--text-medium);">City council approves funding package to help local businesses affected by pandemic restrictions...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Tab -->
+        <div id="community" class="tab-content">
+            <div class="hero">
+                <h2>Stronger Together</h2>
+                <p>Connect with your community, offer help, and build meaningful relationships during challenging times.</p>
+            </div>
+
+            <div class="community-map">
+                <div style="text-align: center;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🗺️</div>
+                    <h3>Community Connection Map</h3>
+                    <p style="color: var(--text-medium); margin-top: 1rem;">View local assistance offers and requests in your neighborhood</p>
+                    <button class="btn btn-primary" style="margin-top: 1.5rem;">Explore Interactive Map</button>
+                </div>
+            </div>
+
+            <div class="cards-grid" style="margin-bottom: 3rem;">
+                <div class="card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, var(--success), #27ae60);">🤲</div>
+                    <h3>Offer Assistance</h3>
+                    <p>Share what you can offer to help neighbors in need.</p>
+                    <button class="btn btn-primary">Post an Offer</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, var(--accent-coral), var(--accent-warm));">🙏</div>
+                    <h3>Request Help</h3>
+                    <p>Don't hesitate to ask for support when you need it.</p>
+                    <button class="btn btn-primary">Request Assistance</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">💬</div>
+                    <h3>Local Discussion</h3>
+                    <p>Join conversations and share information with neighbors.</p>
+                    <button class="btn btn-primary">Join Discussion</button>
+                </div>
+            </div>
+
+            <h2 style="margin-bottom: 1.5rem;">Recent Community Activities</h2>
+            <div class="assistance-grid">
+                <div class="assistance-card offer">
+                    <div class="user-info">
+                        <div class="user-avatar">SJ</div>
+                        <div>
+                            <h4>Sarah Johnson</h4>
+                            <p style="color: var(--text-light); font-size: 0.85rem;">Downtown • 2 hours ago</p>
+                        </div>
+                    </div>
+                    <h4 style="color: var(--success); margin-bottom: 0.5rem;">Offering: Grocery Shopping</h4>
+                    <p style="color: var(--text-medium);">Happy to help with grocery shopping for seniors or those at high risk. Available weekdays after 5 PM.</p>
+                    <button class="btn btn-primary" style="margin-top: 1rem;">Contact</button>
+                </div>
+
+                <div class="assistance-card request">
+                    <div class="user-info">
+                        <div class="user-avatar">MC</div>
+                        <div>
+                            <h4>Mike Chen</h4>
+                            <p style="color: var(--text-light); font-size: 0.85rem;">Eastside • 4 hours ago</p>
+                        </div>
+                    </div>
+                    <h4 style="color: var(--accent-coral); margin-bottom: 0.5rem;">Requesting: Pet Care</h4>
+                    <p style="color: var(--text-medium);">Looking for someone to walk my dog while I'm quarantining. Small, friendly terrier, twice daily.</p>
+                    <button class="btn btn-secondary" style="margin-top: 1rem;">Offer Help</button>
+                </div>
+
+                <div class="assistance-card offer">
+                    <div class="user-info">
+                        <div class="user-avatar">ER</div>
+                        <div>
+                            <h4>Emily Rodriguez</h4>
+                            <p style="color: var(--text-light); font-size: 0.85rem;">Midtown • 6 hours ago</p>
+                        </div>
+                    </div>
+                    <h4 style="color: var(--success); margin-bottom: 0.5rem;">Offering: Tutoring</h4>
+                    <p style="color: var(--text-medium);">Free online tutoring for K-12 students in Math and Science. Teacher with 10 years experience.</p>
+                    <button class="btn btn-primary" style="margin-top: 1rem;">Contact</button>
+                </div>
+
+                <div class="assistance-card offer">
+                    <div class="user-info">
+                        <div class="user-avatar">DK</div>
+                        <div>
+                            <h4>David Kim</h4>
+                            <p style="color: var(--text-light); font-size: 0.85rem;">Westside • 1 day ago</p>
+                        </div>
+                    </div>
+                    <h4 style="color: var(--success); margin-bottom: 0.5rem;">Offering: Tech Support</h4>
+                    <p style="color: var(--text-medium);">Can help seniors set up video calls, online appointments, or troubleshoot basic tech issues.</p>
+                    <button class="btn btn-primary" style="margin-top: 1rem;">Contact</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Symptom Checker Modal -->
+    <div id="symptomChecker" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('symptomChecker')">&times;</span>
+            <h2 style="margin-bottom: 1rem; color: var(--primary-teal);">Symptom Checker</h2>
+            <p style="color: var(--text-medium); margin-bottom: 2rem;">Select the symptoms you're experiencing. This is not a diagnosis—please consult a healthcare provider for medical advice.</p>
+            
+            <div class="symptom-checker">
+                <div class="symptom-option">
+                    <input type="checkbox" id="fever">
+                    <label for="fever">Fever (100.4°F or higher)</label>
+                </div>
+                <div class="symptom-option">
+                    <input type="checkbox" id="cough">
+                    <label for="cough">Persistent cough</label>
+                </div>
+                <div class="symptom-option">
+                    <input type="checkbox" id="breathing">
+                    <label for="breathing">Difficulty breathing</label>
+                </div>
+                <div class="symptom-option">
+                    <input type="checkbox" id="fatigue">
+                    <label for="fatigue">Fatigue or tiredness</label>
+                </div>
+                <div class="symptom-option">
+                    <input type="checkbox" id="headache">
+                    <label for="headache">Headache</label>
+                </div>
+                <div class="symptom-option">
+                    <input type="checkbox" id="taste">
+                    <label for="taste">Loss of taste or smell</label>
+                </div>
+                <div class="symptom-option">
+                    <input type="checkbox" id="throat">
+                    <label for="throat">Sore throat</label>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%; margin-top: 2rem; font-size: 1.1rem;" onclick="analyzeSymptoms()">Analyze Symptoms</button>
+
+            <div id="symptomResult" style="margin-top: 2rem; padding: 1.5rem; border-radius: 15px; display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About CareConnect</h3>
+                <p style="color: rgba(255,255,255,0.8); line-height: 1.6;">Your comprehensive pandemic response toolkit designed to support individuals and communities through challenging times.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Healthcare Resources</a></li>
+                    <li><a href="#">Mental Health Support</a></li>
+                    <li><a href="#">Community Connect</a></li>
+                    <li><a href="#">Emergency Contacts</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Emergency Hotlines</h3>
+                <ul class="footer-links">
+                    <li><a href="tel:911">Emergency: 911</a></li>
+                    <li><a href="tel:988">Crisis Line: 988</a></li>
+                    <li><a href="#">COVID Hotline</a></li>
+                    <li><a href="#">Domestic Violence</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 CareConnect - Pandemic Response Toolkit. Created for community support and wellbeing.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.85rem;">This is an open-source project. Medical information provided is for educational purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab Switching
+        function switchTab(tabName) {
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Set active tab
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Nav tab click handlers
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                switchTab(tab.dataset.tab);
+            });
+        });
+
+        // Translations object
+        const translations = {
+            en: {
+                logoText: 'CareConnect',
+                navHome: 'Home',
+                navHealthcare: 'Healthcare',
+                navMentalHealth: 'Mental Health',
+                navInformation: 'Information Hub',
+                navCommunity: 'Community',
+                heroTitle: 'Your Comprehensive Pandemic Support System',
+                heroSubtitle: 'Access healthcare resources, mental wellness support, real-time information, and community connections—all in one place. We\'re here to help you navigate these challenging times with confidence and care.',
+                healthcareTitle: 'Healthcare Resources',
+                healthcareDesc: 'Find nearby facilities, schedule vaccinations, access telemedicine, and check your symptoms with our comprehensive healthcare toolkit.',
+                mentalHealthTitle: 'Mental Wellness',
+                mentalHealthDesc: 'Access meditation guides, connect with therapists, practice stress-relief activities, and prioritize your mental health.',
+                infoHubTitle: 'Information Hub',
+                infoHubDesc: 'Stay informed with real-time pandemic data, latest guidelines, verified news updates, and expert recommendations.',
+                communityTitle: 'Community Connect',
+                communityDesc: 'Connect with neighbors, offer or request assistance, share local resources, and build a supportive community network.',
+                exploreBtn: 'Explore Healthcare →',
+                startWellnessBtn: 'Start Wellness Journey →',
+                viewUpdatesBtn: 'View Updates →',
+                joinCommunityBtn: 'Join Community →',
+                symptomCheckerTitle: 'Symptom Checker',
+                symptomCheckerDesc: 'Check your symptoms and get preliminary guidance on next steps.',
+                vaccinationTitle: 'Vaccination Scheduler',
+                vaccinationDesc: 'Find vaccination centers and book your appointment easily.',
+                telemedicineTitle: 'Telemedicine',
+                telemedicineDesc: 'Connect with healthcare providers from the comfort of your home.',
+                facilitiesNearYou: 'Find Healthcare Facilities Near You',
+                searchPlaceholder: 'Enter your location or zip code',
+                searchBtn: 'Search',
+                guidedMeditation: 'Guided Meditation',
+                meditationDesc: '5-30 minute sessions for stress relief and mindfulness',
+                stressRelief: 'Stress Relief',
+                stressReliefDesc: 'Breathing exercises, relaxation techniques, and more',
+                therapistConnect: 'Therapist Connect',
+                therapistDesc: 'Book sessions with licensed mental health professionals',
+                wellnessJournal: 'Wellness Journal',
+                journalDesc: 'Track your mood, thoughts, and mental health journey',
+                checkSymptomsBtn: 'Check Symptoms',
+                scheduleNowBtn: 'Schedule Now',
+                startConsultationBtn: 'Start Consultation',
+                startSessionBtn: 'Start Session',
+                tryActivitiesBtn: 'Try Activities',
+                findTherapistBtn: 'Find Therapist',
+                startJournalBtn: 'Start Journal',
+                statsUsers: 'Active Users',
+                statsFacilities: 'Healthcare Facilities',
+                statsProfessionals: 'Mental Health Professionals',
+                statsConnections: 'Community Connections',
+                footerAbout: 'About CareConnect',
+                footerAboutDesc: 'Your comprehensive pandemic response toolkit designed to support individuals and communities through challenging times.',
+                footerQuickLinks: 'Quick Links',
+                footerSupport: 'Support',
+                footerEmergency: 'Emergency Hotlines',
+                footerCopyright: '© 2026 CareConnect - Pandemic Response Toolkit. Created for community support and wellbeing.',
+                footerDisclaimer: 'This is an open-source project. Medical information provided is for educational purposes only.'
+            },
+            es: {
+                logoText: 'CareConnect',
+                navHome: 'Inicio',
+                navHealthcare: 'Atención Médica',
+                navMentalHealth: 'Salud Mental',
+                navInformation: 'Centro de Información',
+                navCommunity: 'Comunidad',
+                heroTitle: 'Su Sistema Integral de Apoyo en la Pandemia',
+                heroSubtitle: 'Acceda a recursos de atención médica, apoyo de bienestar mental, información en tiempo real y conexiones comunitarias, todo en un solo lugar. Estamos aquí para ayudarlo a navegar estos tiempos difíciles con confianza y cuidado.',
+                healthcareTitle: 'Recursos de Atención Médica',
+                healthcareDesc: 'Encuentre instalaciones cercanas, programe vacunas, acceda a telemedicina y verifique sus síntomas con nuestro conjunto de herramientas de atención médica.',
+                mentalHealthTitle: 'Bienestar Mental',
+                mentalHealthDesc: 'Acceda a guías de meditación, conéctese con terapeutas, practique actividades para aliviar el estrés y priorice su salud mental.',
+                infoHubTitle: 'Centro de Información',
+                infoHubDesc: 'Manténgase informado con datos en tiempo real sobre la pandemia, pautas recientes, noticias verificadas y recomendaciones de expertos.',
+                communityTitle: 'Conexión Comunitaria',
+                communityDesc: 'Conéctese con vecinos, ofrezca o solicite asistencia, comparta recursos locales y construya una red de apoyo comunitario.',
+                exploreBtn: 'Explorar Atención Médica →',
+                startWellnessBtn: 'Comenzar Viaje de Bienestar →',
+                viewUpdatesBtn: 'Ver Actualizaciones →',
+                joinCommunityBtn: 'Unirse a la Comunidad →',
+                symptomCheckerTitle: 'Verificador de Síntomas',
+                symptomCheckerDesc: 'Verifique sus síntomas y obtenga orientación preliminar sobre los próximos pasos.',
+                vaccinationTitle: 'Programador de Vacunación',
+                vaccinationDesc: 'Encuentre centros de vacunación y reserve su cita fácilmente.',
+                telemedicineTitle: 'Telemedicina',
+                telemedicineDesc: 'Conéctese con proveedores de atención médica desde la comodidad de su hogar.',
+                facilitiesNearYou: 'Encuentre Instalaciones de Atención Médica Cerca de Usted',
+                searchPlaceholder: 'Ingrese su ubicación o código postal',
+                searchBtn: 'Buscar',
+                guidedMeditation: 'Meditación Guiada',
+                meditationDesc: 'Sesiones de 5-30 minutos para alivio del estrés y atención plena',
+                stressRelief: 'Alivio del Estrés',
+                stressReliefDesc: 'Ejercicios de respiración, técnicas de relajación y más',
+                therapistConnect: 'Conexión con Terapeuta',
+                therapistDesc: 'Reserve sesiones con profesionales de salud mental licenciados',
+                wellnessJournal: 'Diario de Bienestar',
+                journalDesc: 'Rastree su estado de ánimo, pensamientos y viaje de salud mental',
+                checkSymptomsBtn: 'Verificar Síntomas',
+                scheduleNowBtn: 'Programar Ahora',
+                startConsultationBtn: 'Iniciar Consulta',
+                startSessionBtn: 'Iniciar Sesión',
+                tryActivitiesBtn: 'Probar Actividades',
+                findTherapistBtn: 'Encontrar Terapeuta',
+                startJournalBtn: 'Iniciar Diario',
+                statsUsers: 'Usuarios Activos',
+                statsFacilities: 'Instalaciones de Atención Médica',
+                statsProfessionals: 'Profesionales de Salud Mental',
+                statsConnections: 'Conexiones Comunitarias',
+                footerAbout: 'Acerca de CareConnect',
+                footerAboutDesc: 'Su conjunto de herramientas integral de respuesta a pandemias diseñado para apoyar a individuos y comunidades en tiempos difíciles.',
+                footerQuickLinks: 'Enlaces Rápidos',
+                footerSupport: 'Soporte',
+                footerEmergency: 'Líneas de Emergencia',
+                footerCopyright: '© 2026 CareConnect - Kit de Respuesta a Pandemias. Creado para el apoyo y bienestar de la comunidad.',
+                footerDisclaimer: 'Este es un proyecto de código abierto. La información médica proporcionada es solo para fines educativos.'
+            },
+            fr: {
+                logoText: 'CareConnect',
+                navHome: 'Accueil',
+                navHealthcare: 'Santé',
+                navMentalHealth: 'Santé Mentale',
+                navInformation: 'Centre d\'Information',
+                navCommunity: 'Communauté',
+                heroTitle: 'Votre Système de Soutien Pandémique Complet',
+                heroSubtitle: 'Accédez aux ressources de santé, au soutien au bien-être mental, aux informations en temps réel et aux connexions communautaires, le tout en un seul endroit. Nous sommes là pour vous aider à naviguer ces temps difficiles avec confiance et soin.',
+                healthcareTitle: 'Ressources de Santé',
+                healthcareDesc: 'Trouvez des installations à proximité, planifiez des vaccinations, accédez à la télémédecine et vérifiez vos symptômes avec notre boîte à outils de santé complète.',
+                mentalHealthTitle: 'Bien-être Mental',
+                mentalHealthDesc: 'Accédez à des guides de méditation, connectez-vous avec des thérapeutes, pratiquez des activités de soulagement du stress et priorisez votre santé mentale.',
+                infoHubTitle: 'Centre d\'Information',
+                infoHubDesc: 'Restez informé avec des données pandémiques en temps réel, les dernières directives, des mises à jour d\'actualités vérifiées et des recommandations d\'experts.',
+                communityTitle: 'Connexion Communautaire',
+                communityDesc: 'Connectez-vous avec vos voisins, offrez ou demandez de l\'aide, partagez des ressources locales et construisez un réseau de soutien communautaire.',
+                exploreBtn: 'Explorer la Santé →',
+                startWellnessBtn: 'Commencer le Voyage de Bien-être →',
+                viewUpdatesBtn: 'Voir les Mises à Jour →',
+                joinCommunityBtn: 'Rejoindre la Communauté →',
+                symptomCheckerTitle: 'Vérificateur de Symptômes',
+                symptomCheckerDesc: 'Vérifiez vos symptômes et obtenez des conseils préliminaires sur les prochaines étapes.',
+                vaccinationTitle: 'Planificateur de Vaccination',
+                vaccinationDesc: 'Trouvez des centres de vaccination et réservez votre rendez-vous facilement.',
+                telemedicineTitle: 'Télémédecine',
+                telemedicineDesc: 'Connectez-vous avec des professionnels de santé depuis le confort de votre foyer.',
+                facilitiesNearYou: 'Trouver des Installations de Santé Près de Vous',
+                searchPlaceholder: 'Entrez votre emplacement ou code postal',
+                searchBtn: 'Rechercher',
+                guidedMeditation: 'Méditation Guidée',
+                meditationDesc: 'Séances de 5-30 minutes pour soulagement du stress et pleine conscience',
+                stressRelief: 'Soulagement du Stress',
+                stressReliefDesc: 'Exercices de respiration, techniques de relaxation et plus',
+                therapistConnect: 'Connexion avec Thérapeute',
+                therapistDesc: 'Réservez des séances avec des professionnels de santé mentale agréés',
+                wellnessJournal: 'Journal de Bien-être',
+                journalDesc: 'Suivez votre humeur, vos pensées et votre parcours de santé mentale',
+                checkSymptomsBtn: 'Vérifier les Symptômes',
+                scheduleNowBtn: 'Planifier Maintenant',
+                startConsultationBtn: 'Démarrer la Consultation',
+                startSessionBtn: 'Démarrer la Séance',
+                tryActivitiesBtn: 'Essayer les Activités',
+                findTherapistBtn: 'Trouver un Thérapeute',
+                startJournalBtn: 'Commencer le Journal',
+                statsUsers: 'Utilisateurs Actifs',
+                statsFacilities: 'Installations de Santé',
+                statsProfessionals: 'Professionnels de Santé Mentale',
+                statsConnections: 'Connexions Communautaires',
+                footerAbout: 'À propos de CareConnect',
+                footerAboutDesc: 'Votre boîte à outils complète de réponse pandémique conçue pour soutenir les individus et les communautés dans les moments difficiles.',
+                footerQuickLinks: 'Liens Rapides',
+                footerSupport: 'Support',
+                footerEmergency: 'Numéros d\'Urgence',
+                footerCopyright: '© 2026 CareConnect - Boîte à Outils de Réponse Pandémique. Créé pour le soutien et le bien-être communautaire.',
+                footerDisclaimer: 'Il s\'agit d\'un projet open source. Les informations médicales fournies sont à des fins éducatives uniquement.'
+            },
+            de: {
+                logoText: 'CareConnect',
+                navHome: 'Startseite',
+                navHealthcare: 'Gesundheit',
+                navMentalHealth: 'Psychische Gesundheit',
+                navInformation: 'Informationszentrum',
+                navCommunity: 'Gemeinschaft',
+                heroTitle: 'Ihr Umfassendes Pandemie-Unterstützungssystem',
+                heroSubtitle: 'Zugriff auf Gesundheitsressourcen, Unterstützung für psychisches Wohlbefinden, Echtzeitinformationen und Gemeinschaftsverbindungen – alles an einem Ort. Wir helfen Ihnen, diese herausfordernden Zeiten mit Vertrauen und Fürsorge zu meistern.',
+                healthcareTitle: 'Gesundheitsressourcen',
+                healthcareDesc: 'Finden Sie Einrichtungen in der Nähe, vereinbaren Sie Impftermine, nutzen Sie Telemedizin und überprüfen Sie Ihre Symptome mit unserem umfassenden Gesundheits-Toolkit.',
+                mentalHealthTitle: 'Psychisches Wohlbefinden',
+                mentalHealthDesc: 'Zugriff auf Meditationsanleitungen, Kontakt zu Therapeuten, Stressbewältigungsaktivitäten und Priorisierung Ihrer psychischen Gesundheit.',
+                infoHubTitle: 'Informationszentrum',
+                infoHubDesc: 'Bleiben Sie informiert mit Echtzeit-Pandemiedaten, aktuellen Richtlinien, verifizierten Nachrichtenaktualisierungen und Expertenempfehlungen.',
+                communityTitle: 'Gemeinschaftsverbindung',
+                communityDesc: 'Verbinden Sie sich mit Nachbarn, bieten Sie Hilfe an oder fordern Sie sie an, teilen Sie lokale Ressourcen und bauen Sie ein unterstützendes Gemeinschaftsnetzwerk auf.',
+                exploreBtn: 'Gesundheit Erkunden →',
+                startWellnessBtn: 'Wellness-Reise Beginnen →',
+                viewUpdatesBtn: 'Updates Anzeigen →',
+                joinCommunityBtn: 'Gemeinschaft Beitreten →',
+                symptomCheckerTitle: 'Symptomprüfer',
+                symptomCheckerDesc: 'Überprüfen Sie Ihre Symptome und erhalten Sie vorläufige Hinweise zu nächsten Schritten.',
+                vaccinationTitle: 'Impfplaner',
+                vaccinationDesc: 'Finden Sie Impfzentren und buchen Sie Ihren Termin einfach.',
+                telemedicineTitle: 'Telemedizin',
+                telemedicineDesc: 'Verbinden Sie sich mit Gesundheitsdienstleistern bequem von zu Hause aus.',
+                facilitiesNearYou: 'Gesundheitseinrichtungen in Ihrer Nähe Finden',
+                searchPlaceholder: 'Geben Sie Ihren Standort oder Postleitzahl ein',
+                searchBtn: 'Suchen',
+                guidedMeditation: 'Geführte Meditation',
+                meditationDesc: '5-30 Minuten Sitzungen zur Stressbewältigung und Achtsamkeit',
+                stressRelief: 'Stressbewältigung',
+                stressReliefDesc: 'Atemübungen, Entspannungstechniken und mehr',
+                therapistConnect: 'Therapeutenverbindung',
+                therapistDesc: 'Buchen Sie Sitzungen mit lizenzierten psychischen Gesundheitsfachleuten',
+                wellnessJournal: 'Wellness-Tagebuch',
+                journalDesc: 'Verfolgen Sie Ihre Stimmung, Gedanken und psychische Gesundheitsreise',
+                checkSymptomsBtn: 'Symptome Prüfen',
+                scheduleNowBtn: 'Jetzt Planen',
+                startConsultationBtn: 'Beratung Starten',
+                startSessionBtn: 'Sitzung Starten',
+                tryActivitiesBtn: 'Aktivitäten Ausprobieren',
+                findTherapistBtn: 'Therapeut Finden',
+                startJournalBtn: 'Tagebuch Starten',
+                statsUsers: 'Aktive Benutzer',
+                statsFacilities: 'Gesundheitseinrichtungen',
+                statsProfessionals: 'Psychische Gesundheitsfachleute',
+                statsConnections: 'Gemeinschaftsverbindungen',
+                footerAbout: 'Über CareConnect',
+                footerAboutDesc: 'Ihr umfassendes Pandemie-Reaktions-Toolkit zur Unterstützung von Einzelpersonen und Gemeinschaften in schwierigen Zeiten.',
+                footerQuickLinks: 'Schnelllinks',
+                footerSupport: 'Unterstützung',
+                footerEmergency: 'Notfall-Hotlines',
+                footerCopyright: '© 2026 CareConnect - Pandemie-Reaktions-Toolkit. Erstellt für Gemeinschaftsunterstützung und Wohlbefinden.',
+                footerDisclaimer: 'Dies ist ein Open-Source-Projekt. Medizinische Informationen dienen nur zu Bildungszwecken.'
+            },
+            hi: {
+                logoText: 'CareConnect',
+                navHome: 'होम',
+                navHealthcare: 'स्वास्थ्य सेवा',
+                navMentalHealth: 'मानसिक स्वास्थ्य',
+                navInformation: 'सूचना केंद्र',
+                navCommunity: 'समुदाय',
+                heroTitle: 'आपकी व्यापक महामारी सहायता प्रणाली',
+                heroSubtitle: 'स्वास्थ्य सेवा संसाधनों, मानसिक कल्याण समर्थन, वास्तविक समय की जानकारी और सामुदायिक कनेक्शन तक पहुंचें—सब एक ही जगह पर। हम यहां आत्मविश्वास और देखभाल के साथ इन चुनौतीपूर्ण समय को पार करने में आपकी मदद करने के लिए हैं।',
+                healthcareTitle: 'स्वास्थ्य सेवा संसाधन',
+                healthcareDesc: 'आस-पास की सुविधाएं खोजें, टीकाकरण शेड्यूल करें, टेलीमेडिसिन तक पहुंचें और हमारे व्यापक स्वास्थ्य सेवा टूलकिट के साथ अपने लक्षणों की जांच करें।',
+                mentalHealthTitle: 'मानसिक कल्याण',
+                mentalHealthDesc: 'ध्यान गाइड तक पहुंचें, चिकित्सकों से जुड़ें, तनाव-राहत गतिविधियों का अभ्यास करें और अपने मानसिक स्वास्थ्य को प्राथमिकता दें।',
+                infoHubTitle: 'सूचना केंद्र',
+                infoHubDesc: 'वास्तविक समय महामारी डेटा, नवीनतम दिशानिर्देश, सत्यापित समाचार अपडेट और विशेषज्ञ अनुशंसाओं के साथ सूचित रहें।',
+                communityTitle: 'समुदाय कनेक्शन',
+                communityDesc: 'पड़ोसियों से जुड़ें, सहायता प्रदान करें या अनुरोध करें, स्थानीय संसाधन साझा करें और एक सहायक सामुदायिक नेटवर्क बनाएं।',
+                exploreBtn: 'स्वास्थ्य सेवा देखें →',
+                startWellnessBtn: 'कल्याण यात्रा शुरू करें →',
+                viewUpdatesBtn: 'अपडेट देखें →',
+                joinCommunityBtn: 'समुदाय में शामिल हों →',
+                symptomCheckerTitle: 'लक्षण जांचकर्ता',
+                symptomCheckerDesc: 'अपने लक्षणों की जांच करें और अगले चरणों पर प्रारंभिक मार्गदर्शन प्राप्त करें।',
+                vaccinationTitle: 'टीकाकरण शेड्यूलर',
+                vaccinationDesc: 'टीकाकरण केंद्र खोजें और आसानी से अपनी नियुक्ति बुक करें।',
+                telemedicineTitle: 'टेलीमेडिसिन',
+                telemedicineDesc: 'अपने घर की सुविधा से स्वास्थ्य सेवा प्रदाताओं से जुड़ें।',
+                facilitiesNearYou: 'अपने आस-पास स्वास्थ्य सेवा सुविधाएं खोजें',
+                searchPlaceholder: 'अपना स्थान या पिन कोड दर्ज करें',
+                searchBtn: 'खोजें',
+                guidedMeditation: 'निर्देशित ध्यान',
+                meditationDesc: 'तनाव राहत और माइंडफुलनेस के लिए 5-30 मिनट के सत्र',
+                stressRelief: 'तनाव राहत',
+                stressReliefDesc: 'श्वास व्यायाम, विश्राम तकनीक और अधिक',
+                therapistConnect: 'चिकित्सक कनेक्शन',
+                therapistDesc: 'लाइसेंस प्राप्त मानसिक स्वास्थ्य पेशेवरों के साथ सत्र बुक करें',
+                wellnessJournal: 'कल्याण पत्रिका',
+                journalDesc: 'अपने मूड, विचारों और मानसिक स्वास्थ्य यात्रा को ट्रैक करें',
+                checkSymptomsBtn: 'लक्षण जांचें',
+                scheduleNowBtn: 'अभी शेड्यूल करें',
+                startConsultationBtn: 'परामर्श शुरू करें',
+                startSessionBtn: 'सत्र शुरू करें',
+                tryActivitiesBtn: 'गतिविधियां आज़माएं',
+                findTherapistBtn: 'चिकित्सक खोजें',
+                startJournalBtn: 'पत्रिका शुरू करें',
+                statsUsers: 'सक्रिय उपयोगकर्ता',
+                statsFacilities: 'स्वास्थ्य सेवा सुविधाएं',
+                statsProfessionals: 'मानसिक स्वास्थ्य पेशेवर',
+                statsConnections: 'सामुदायिक कनेक्शन',
+                footerAbout: 'CareConnect के बारे में',
+                footerAboutDesc: 'चुनौतीपूर्ण समय में व्यक्तियों और समुदायों का समर्थन करने के लिए डिज़ाइन किया गया आपका व्यापक महामारी प्रतिक्रिया टूलकिट।',
+                footerQuickLinks: 'त्वरित लिंक',
+                footerSupport: 'समर्थन',
+                footerEmergency: 'आपातकालीन हॉटलाइन',
+                footerCopyright: '© 2026 CareConnect - महामारी प्रतिक्रिया टूलकिट। सामुदायिक समर्थन और कल्याण के लिए बनाया गया।',
+                footerDisclaimer: 'यह एक ओपन-सोर्स प्रोजेक्ट है। प्रदान की गई चिकित्सा जानकारी केवल शैक्षिक उद्देश्यों के लिए है।'
+            },
+            zh: {
+                logoText: 'CareConnect',
+                navHome: '主页',
+                navHealthcare: '医疗保健',
+                navMentalHealth: '心理健康',
+                navInformation: '信息中心',
+                navCommunity: '社区',
+                heroTitle: '您的综合疫情支持系统',
+                heroSubtitle: '访问医疗保健资源、心理健康支持、实时信息和社区联系——所有这些都在一个地方。我们在这里帮助您充满信心和关怀地度过这些充满挑战的时期。',
+                healthcareTitle: '医疗保健资源',
+                healthcareDesc: '查找附近的设施、安排疫苗接种、访问远程医疗并使用我们全面的医疗保健工具包检查您的症状。',
+                mentalHealthTitle: '心理健康',
+                mentalHealthDesc: '访问冥想指南、与治疗师联系、练习减压活动并优先考虑您的心理健康。',
+                infoHubTitle: '信息中心',
+                infoHubDesc: '通过实时疫情数据、最新指南、经过验证的新闻更新和专家建议保持信息灵通。',
+                communityTitle: '社区联系',
+                communityDesc: '与邻居联系、提供或请求帮助、分享本地资源并建立支持性社区网络。',
+                exploreBtn: '探索医疗保健 →',
+                startWellnessBtn: '开始健康之旅 →',
+                viewUpdatesBtn: '查看更新 →',
+                joinCommunityBtn: '加入社区 →',
+                symptomCheckerTitle: '症状检查器',
+                symptomCheckerDesc: '检查您的症状并获得有关后续步骤的初步指导。',
+                vaccinationTitle: '疫苗接种调度器',
+                vaccinationDesc: '查找疫苗接种中心并轻松预订您的预约。',
+                telemedicineTitle: '远程医疗',
+                telemedicineDesc: '在家中舒适地与医疗保健提供者联系。',
+                facilitiesNearYou: '查找您附近的医疗保健设施',
+                searchPlaceholder: '输入您的位置或邮政编码',
+                searchBtn: '搜索',
+                guidedMeditation: '引导冥想',
+                meditationDesc: '5-30分钟的减压和正念课程',
+                stressRelief: '减压',
+                stressReliefDesc: '呼吸练习、放松技巧等',
+                therapistConnect: '治疗师联系',
+                therapistDesc: '与持证心理健康专业人员预订课程',
+                wellnessJournal: '健康日记',
+                journalDesc: '跟踪您的情绪、想法和心理健康之旅',
+                checkSymptomsBtn: '检查症状',
+                scheduleNowBtn: '立即安排',
+                startConsultationBtn: '开始咨询',
+                startSessionBtn: '开始课程',
+                tryActivitiesBtn: '尝试活动',
+                findTherapistBtn: '查找治疗师',
+                startJournalBtn: '开始日记',
+                statsUsers: '活跃用户',
+                statsFacilities: '医疗保健设施',
+                statsProfessionals: '心理健康专业人员',
+                statsConnections: '社区联系',
+                footerAbout: '关于CareConnect',
+                footerAboutDesc: '您的综合疫情应对工具包，旨在在困难时期支持个人和社区。',
+                footerQuickLinks: '快速链接',
+                footerSupport: '支持',
+                footerEmergency: '紧急热线',
+                footerCopyright: '© 2026 CareConnect - 疫情应对工具包。为社区支持和福祉而创建。',
+                footerDisclaimer: '这是一个开源项目。提供的医疗信息仅用于教育目的。'
+            },
+            ar: {
+                logoText: 'CareConnect',
+                navHome: 'الرئيسية',
+                navHealthcare: 'الرعاية الصحية',
+                navMentalHealth: 'الصحة النفسية',
+                navInformation: 'مركز المعلومات',
+                navCommunity: 'المجتمع',
+                heroTitle: 'نظام الدعم الشامل للوباء',
+                heroSubtitle: 'الوصول إلى موارد الرعاية الصحية ودعم الصحة النفسية والمعلومات في الوقت الفعلي والاتصالات المجتمعية - كل ذلك في مكان واحد. نحن هنا لمساعدتك على التنقل في هذه الأوقات الصعبة بثقة ورعاية.',
+                healthcareTitle: 'موارد الرعاية الصحية',
+                healthcareDesc: 'ابحث عن المرافق القريبة، وحدد مواعيد التطعيم، والوصول إلى الطب عن بعد، وفحص أعراضك باستخدام مجموعة أدوات الرعاية الصحية الشاملة لدينا.',
+                mentalHealthTitle: 'الصحة النفسية',
+                mentalHealthDesc: 'الوصول إلى أدلة التأمل، والاتصال بالمعالجين، وممارسة أنشطة تخفيف التوتر، وإعطاء الأولوية لصحتك النفسية.',
+                infoHubTitle: 'مركز المعلومات',
+                infoHubDesc: 'ابق على اطلاع مع بيانات الوباء في الوقت الفعلي، وأحدث الإرشادات، والتحديثات الإخبارية التي تم التحقق منها، وتوصيات الخبراء.',
+                communityTitle: 'الاتصال المجتمعي',
+                communityDesc: 'تواصل مع الجيران، وقدم أو اطلب المساعدة، وشارك الموارد المحلية، وبناء شبكة دعم مجتمعية.',
+                exploreBtn: 'استكشاف الرعاية الصحية ←',
+                startWellnessBtn: 'بدء رحلة الصحة ←',
+                viewUpdatesBtn: 'عرض التحديثات ←',
+                joinCommunityBtn: 'الانضمام إلى المجتمع ←',
+                symptomCheckerTitle: 'فاحص الأعراض',
+                symptomCheckerDesc: 'تحقق من أعراضك واحصل على إرشادات أولية حول الخطوات التالية.',
+                vaccinationTitle: 'جدولة التطعيم',
+                vaccinationDesc: 'ابحث عن مراكز التطعيم واحجز موعدك بسهولة.',
+                telemedicineTitle: 'الطب عن بعد',
+                telemedicineDesc: 'تواصل مع مقدمي الرعاية الصحية من راحة منزلك.',
+                facilitiesNearYou: 'ابحث عن مرافق الرعاية الصحية بالقرب منك',
+                searchPlaceholder: 'أدخل موقعك أو الرمز البريدي',
+                searchBtn: 'بحث',
+                guidedMeditation: 'التأمل الموجه',
+                meditationDesc: 'جلسات 5-30 دقيقة لتخفيف التوتر واليقظة الذهنية',
+                stressRelief: 'تخفيف التوتر',
+                stressReliefDesc: 'تمارين التنفس وتقنيات الاسترخاء والمزيد',
+                therapistConnect: 'الاتصال بالمعالج',
+                therapistDesc: 'احجز جلسات مع متخصصين مرخصين في الصحة النفسية',
+                wellnessJournal: 'يومية الصحة',
+                journalDesc: 'تتبع مزاجك وأفكارك ورحلة صحتك النفسية',
+                checkSymptomsBtn: 'فحص الأعراض',
+                scheduleNowBtn: 'الجدولة الآن',
+                startConsultationBtn: 'بدء الاستشارة',
+                startSessionBtn: 'بدء الجلسة',
+                tryActivitiesBtn: 'تجربة الأنشطة',
+                findTherapistBtn: 'البحث عن معالج',
+                startJournalBtn: 'بدء اليومية',
+                statsUsers: 'المستخدمون النشطون',
+                statsFacilities: 'مرافق الرعاية الصحية',
+                statsProfessionals: 'متخصصو الصحة النفسية',
+                statsConnections: 'الاتصالات المجتمعية',
+                footerAbout: 'حول CareConnect',
+                footerAboutDesc: 'مجموعة أدوات الاستجابة الشاملة للوباء المصممة لدعم الأفراد والمجتمعات في الأوقات الصعبة.',
+                footerQuickLinks: 'روابط سريعة',
+                footerSupport: 'الدعم',
+                footerEmergency: 'خطوط الطوارئ',
+                footerCopyright: '© 2026 CareConnect - مجموعة أدوات الاستجابة للوباء. تم إنشاؤها لدعم المجتمع والرفاهية.',
+                footerDisclaimer: 'هذا مشروع مفتوح المصدر. المعلومات الطبية المقدمة هي لأغراض تعليمية فقط.'
+            }
+        };
+
+        let currentLang = 'en';
+
+        function updateLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
+            
+            // Update logo
+            document.querySelector('.logo h1').textContent = t.logoText;
+            
+            // Update navigation
+            document.querySelector('[data-tab="home"]').childNodes[0].textContent = t.navHome + ' ';
+            document.querySelector('[data-tab="healthcare"]').childNodes[0].textContent = t.navHealthcare + ' ';
+            document.querySelector('[data-tab="mental-health"]').childNodes[0].textContent = t.navMentalHealth + ' ';
+            document.querySelector('[data-tab="information"]').childNodes[0].textContent = t.navInformation + ' ';
+            document.querySelector('[data-tab="community"]').childNodes[0].textContent = t.navCommunity + ' ';
+            
+            // Update hero section
+            const heroTitle = document.querySelector('.hero h2');
+            const heroSubtitle = document.querySelector('.hero p');
+            if (heroTitle) heroTitle.textContent = t.heroTitle;
+            if (heroSubtitle) heroSubtitle.textContent = t.heroSubtitle;
+            
+            // Update main cards on home page
+            const cards = document.querySelectorAll('#home .card');
+            if (cards.length >= 4) {
+                cards[0].querySelector('h3').textContent = t.healthcareTitle;
+                cards[0].querySelector('p').textContent = t.healthcareDesc;
+                cards[0].querySelector('.btn').textContent = t.exploreBtn;
+                
+                cards[1].querySelector('h3').textContent = t.mentalHealthTitle;
+                cards[1].querySelector('p').textContent = t.mentalHealthDesc;
+                cards[1].querySelector('.btn').textContent = t.startWellnessBtn;
+                
+                cards[2].querySelector('h3').textContent = t.infoHubTitle;
+                cards[2].querySelector('p').textContent = t.infoHubDesc;
+                cards[2].querySelector('.btn').textContent = t.viewUpdatesBtn;
+                
+                cards[3].querySelector('h3').textContent = t.communityTitle;
+                cards[3].querySelector('p').textContent = t.communityDesc;
+                cards[3].querySelector('.btn').textContent = t.joinCommunityBtn;
+            }
+            
+            // Update stats
+            const statLabels = document.querySelectorAll('.stat-label');
+            if (statLabels.length >= 4) {
+                statLabels[0].textContent = t.statsUsers;
+                statLabels[1].textContent = t.statsFacilities;
+                statLabels[2].textContent = t.statsProfessionals;
+                statLabels[3].textContent = t.statsConnections;
+            }
+            
+            // Update healthcare tab
+            const healthcareCards = document.querySelectorAll('#healthcare .card');
+            if (healthcareCards.length >= 3) {
+                healthcareCards[0].querySelector('h3').textContent = t.symptomCheckerTitle;
+                healthcareCards[0].querySelector('p').textContent = t.symptomCheckerDesc;
+                healthcareCards[0].querySelector('.btn').textContent = t.checkSymptomsBtn;
+                
+                healthcareCards[1].querySelector('h3').textContent = t.vaccinationTitle;
+                healthcareCards[1].querySelector('p').textContent = t.vaccinationDesc;
+                healthcareCards[1].querySelector('.btn').textContent = t.scheduleNowBtn;
+                
+                healthcareCards[2].querySelector('h3').textContent = t.telemedicineTitle;
+                healthcareCards[2].querySelector('p').textContent = t.telemedicineDesc;
+                healthcareCards[2].querySelector('.btn').textContent = t.startConsultationBtn;
+            }
+            
+            // Update facility finder
+            const facilityTitle = document.querySelector('.facility-finder h2');
+            if (facilityTitle) facilityTitle.textContent = t.facilitiesNearYou;
+            
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+            
+            const searchBtn = document.querySelector('.search-box .btn');
+            if (searchBtn) searchBtn.textContent = t.searchBtn;
+            
+            // Update mental health section
+            const wellnessCards = document.querySelectorAll('.wellness-card');
+            if (wellnessCards.length >= 4) {
+                wellnessCards[0].querySelector('h3').textContent = t.guidedMeditation;
+                wellnessCards[0].querySelector('p').textContent = t.meditationDesc;
+                wellnessCards[0].querySelector('.btn').textContent = t.startSessionBtn;
+                
+                wellnessCards[1].querySelector('h3').textContent = t.stressRelief;
+                wellnessCards[1].querySelector('p').textContent = t.stressReliefDesc;
+                wellnessCards[1].querySelector('.btn').textContent = t.tryActivitiesBtn;
+                
+                wellnessCards[2].querySelector('h3').textContent = t.therapistConnect;
+                wellnessCards[2].querySelector('p').textContent = t.therapistDesc;
+                wellnessCards[2].querySelector('.btn').textContent = t.findTherapistBtn;
+                
+                wellnessCards[3].querySelector('h3').textContent = t.wellnessJournal;
+                wellnessCards[3].querySelector('p').textContent = t.journalDesc;
+                wellnessCards[3].querySelector('.btn').textContent = t.startJournalBtn;
+            }
+            
+            // Update footer
+            const footerSections = document.querySelectorAll('.footer-section h3');
+            if (footerSections.length >= 4) {
+                footerSections[0].textContent = t.footerAbout;
+                footerSections[1].textContent = t.footerQuickLinks;
+                footerSections[2].textContent = t.footerSupport;
+                footerSections[3].textContent = t.footerEmergency;
+            }
+            
+            const footerAboutDesc = document.querySelector('.footer-section p');
+            if (footerAboutDesc) footerAboutDesc.textContent = t.footerAboutDesc;
+            
+            const footerBottom = document.querySelector('.footer-bottom');
+            if (footerBottom) {
+                footerBottom.innerHTML = `
+                    <p>${t.footerCopyright}</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.85rem;">${t.footerDisclaimer}</p>
+                `;
+            }
+            
+            // Apply RTL for Arabic
+            if (lang === 'ar') {
+                document.body.setAttribute('dir', 'rtl');
+                document.documentElement.setAttribute('lang', 'ar');
+            } else {
+                document.body.setAttribute('dir', 'ltr');
+                document.documentElement.setAttribute('lang', lang);
+            }
+        }
+
+        // Language Selection
+        document.getElementById('languageSelect').addEventListener('change', (e) => {
+            const lang = e.target.value;
+            updateLanguage(lang);
+        });
+
+        // Accessibility Features
+        let accessibilityMode = {
+            contrast: false,
+            largeText: false
+        };
+
+        document.getElementById('accessibilityBtn').addEventListener('click', () => {
+            const options = [
+                'High Contrast Mode',
+                'Large Text Mode',
+                'Screen Reader Info',
+                'Keyboard Navigation Guide'
+            ];
+            
+            const choice = prompt(`Accessibility Options:\n1. ${options[0]}\n2. ${options[1]}\n3. ${options[2]}\n4. ${options[3]}\n\nEnter option number (1-4):`);
+            
+            if (choice === '1') {
+                accessibilityMode.contrast = !accessibilityMode.contrast;
+                document.body.classList.toggle('high-contrast');
+                alert('High contrast mode ' + (accessibilityMode.contrast ? 'enabled' : 'disabled'));
+            } else if (choice === '2') {
+                accessibilityMode.largeText = !accessibilityMode.largeText;
+                document.body.classList.toggle('large-text');
+                alert('Large text mode ' + (accessibilityMode.largeText ? 'enabled' : 'disabled'));
+            } else if (choice === '3') {
+                alert('Screen Reader Support:\n\n• All interactive elements are properly labeled\n• Images include alt text\n• ARIA landmarks are implemented\n• Keyboard navigation is fully supported');
+            } else if (choice === '4') {
+                alert('Keyboard Navigation:\n\n• Tab - Navigate between elements\n• Enter/Space - Activate buttons\n• Arrow keys - Navigate lists\n• Esc - Close modals');
+            }
+        });
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Symptom Analyzer
+        function analyzeSymptoms() {
+            const symptoms = {
+                fever: document.getElementById('fever').checked,
+                cough: document.getElementById('cough').checked,
+                breathing: document.getElementById('breathing').checked,
+                fatigue: document.getElementById('fatigue').checked,
+                headache: document.getElementById('headache').checked,
+                taste: document.getElementById('taste').checked,
+                throat: document.getElementById('throat').checked
+            };
+
+            const symptomCount = Object.values(symptoms).filter(v => v).length;
+            const resultDiv = document.getElementById('symptomResult');
+            
+            if (symptomCount === 0) {
+                resultDiv.innerHTML = `
+                    <div style="background: var(--bg-cream); padding: 1rem; border-radius: 10px;">
+                        <p>Please select at least one symptom to continue.</p>
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            let severity = 'low';
+            let recommendation = '';
+            
+            if (symptoms.breathing) {
+                severity = 'high';
+                recommendation = `
+                    <div style="background: #fee; border-left: 4px solid var(--accent-coral); padding: 1.5rem;">
+                        <h3 style="color: var(--accent-coral); margin-bottom: 0.5rem;">⚠️ Seek Immediate Care</h3>
+                        <p>Difficulty breathing requires immediate medical attention. Please:</p>
+                        <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                            <li>Call emergency services (911) if severe</li>
+                            <li>Visit the nearest emergency room</li>
+                            <li>Or contact your healthcare provider immediately</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (symptomCount >= 3 || (symptoms.fever && symptoms.cough)) {
+                severity = 'medium';
+                recommendation = `
+                    <div style="background: #fef3e2; border-left: 4px solid var(--warning); padding: 1.5rem;">
+                        <h3 style="color: var(--warning); margin-bottom: 0.5rem;">⚕️ Consult Healthcare Provider</h3>
+                        <p>Your symptoms suggest you should consult with a healthcare provider. We recommend:</p>
+                        <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                            <li>Schedule a telemedicine appointment</li>
+                            <li>Get tested for COVID-19</li>
+                            <li>Self-isolate until evaluated</li>
+                            <li>Monitor your symptoms closely</li>
+                        </ul>
+                        <button class="btn btn-primary" style="margin-top: 1rem;">Schedule Telemedicine</button>
+                    </div>
+                `;
+            } else {
+                severity = 'low';
+                recommendation = `
+                    <div style="background: #e8f5e9; border-left: 4px solid var(--success); padding: 1.5rem;">
+                        <h3 style="color: var(--success); margin-bottom: 0.5rem;">💚 Monitor Your Symptoms</h3>
+                        <p>Your symptoms are mild. Here's what to do:</p>
+                        <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                            <li>Rest and stay hydrated</li>
+                            <li>Monitor symptoms for any changes</li>
+                            <li>Consider getting tested if symptoms persist</li>
+                            <li>Contact healthcare provider if symptoms worsen</li>
+                        </ul>
+                        <button class="btn btn-primary" style="margin-top: 1rem;">Find Testing Center</button>
+                    </div>
+                `;
+            }
+
+            resultDiv.innerHTML = recommendation;
+            resultDiv.style.display = 'block';
+        }
+
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Welcome animation
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.card').forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+
+        // Simulate real-time updates for statistics
+        function updateStats() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                if (stat.textContent.includes('▼') || stat.textContent.includes('▲')) {
+                    // Skip trend indicators
+                    return;
+                }
+                const hasK = stat.textContent.includes('K');
+                const hasM = stat.textContent.includes('M');
+                const hasPercent = stat.textContent.includes('%');
+                
+                if (!hasK && !hasM && !hasPercent) {
+                    // It's a trend, skip it
+                    return;
+                }
+            });
+        }
+
+        // Update stats every 30 seconds (simulated)
+        setInterval(updateStats, 30000);
+    </script>
+</body>
+</html>
